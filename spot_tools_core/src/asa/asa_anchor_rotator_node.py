@@ -9,11 +9,9 @@ from tf.transformations import *
 
 class AnchorRotatorNode:
     def __init__(self):
-        rospy.loginfo("1")
-        rospy.Subscriber(self.asa_node_name + '/found_anchor', FoundAnchor, self.asa_found_anchor_callback)
-        rospy.loginfo("2")
-        self.pub = rospy.Publisher("/anchor_rotated_created", FoundAnchor)
-        rospy.loginfo("3")
+        rospy.init_node('anchor_rotator')
+        rospy.Subscriber('/asa_ros/found_anchor', FoundAnchor, self.asa_found_anchor_callback)
+        self.pub = rospy.Publisher("/anchor_rotated_created", FoundAnchor, queue_size=10)
 
         #tf setup
         self.tf_Buffer = tf.Buffer(rospy.Duration(10))
