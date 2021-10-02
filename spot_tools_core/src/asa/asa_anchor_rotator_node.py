@@ -19,6 +19,8 @@ class AnchorRotatorNode:
         self.tf_broadcaster = tf.TransformBroadcaster()
         self.tf_static_broadcaster = tf.StaticTransformBroadcaster()
 
+        self.drift_free_frame = "odom"
+
 
     def spin(self):
         rospy.spin()
