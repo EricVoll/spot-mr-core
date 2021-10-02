@@ -26,13 +26,24 @@ class TestClass:
         self.test_handles.append(handle)
         self.test_results.append(TestResult(name, msg))
 
+    def get_test_idx(self, handle):
+        return self.test_handles.index(handle)
+
     # Starts the next test
-    def advance_test(self, current_succcss):
+    def advance_test(self, index, current_succcss):
+        if index < self.test_idx:
+            rospy.loginfo("SKipped test end because it was reported already")
+            return
+
         self.test_results[self.test_idx].set_result(current_succcss)
 
         if len(self.test_results) >= self.test_idx + 1:
             self.test_idx += 1
+
+            # Start the next test
+            self.test_handles[self.test_idx]()
         else:
+            # Log the test results to the screen
             self.report_tests_finished()
 
     # Reports the results of this test
@@ -45,7 +56,11 @@ class TestClass:
 
     # Waits for the self.is_finished field to return True and then lets the node die
     def run(self):
-        rate = rospy.Rate(1)
-        while not self.is_finished:
-            rate.sleep()
+        if len(self.test_handles) > 0:
+            self.test_handles[0]()
+            rate = rospy.Rate(1)
+            while not self.is_finished:
+                rate.sleep()
+        else:
+            rospy.loginfo("This TestNode did not register any tests")
     
