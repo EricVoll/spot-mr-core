@@ -6,6 +6,7 @@ class TestResult:
         self.success = False
         self.msg = msg
         self.name = name
+        self.timed_out = False
 
     def set_result(self, value):
         self.success = value
@@ -13,7 +14,11 @@ class TestResult:
     def print(self):
         text = ": " + self.msg if not self.success else ""
         print_method = rospy.loginfo if self.success else rospy.logerr
-        print_method(f"  Test {self.name}: {self.success} {text}")
+        success_text = self.success if not self.timed_out else "Failed: TimedOut"
+        print_method(f"  Test {self.name}: {success_text} {text}")
+
+    def report_timedout(self):
+        self.timed_out = True
         
 
 class TestClass:
@@ -63,6 +68,13 @@ class TestClass:
     def run_next_test(self):
         rospy.loginfo(f"Starting Test {self.test_idx}: {self.test_results[self.test_idx].name}")
         self.test_handles[self.test_idx]()
+
+        idx = self.test_idx
+
+        # Timeout
+        rospy.sleep(3)
+        self.test_results[idx].report_timedout()
+        self.advance_test(idx, False)
 
 
     # Reports the results of this test

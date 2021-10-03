@@ -2,7 +2,7 @@ import rospy
 import sys
 # sys.path.insert(0, '/home/eric/catkin_ws/src/spot-mr-core/spot_tools_core_tests')
 
-from spot_tools_core_tests.src.test_class import TestClass
+from spot_tools_tests_common.test_class import TestClass
 from asa_ros_msgs.msg import FoundAnchor
 import tf2_ros as tf
 from geometry_msgs.msg import TransformStamped
