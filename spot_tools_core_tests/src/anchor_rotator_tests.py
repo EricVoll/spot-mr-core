@@ -39,8 +39,7 @@ class AnchorRotatorTests(TestClass):
         rospy.loginfo("published anchor")
 
     def should_receive_new_frame(self, anchor):
-        pass 
-    #self.advance_test(0, self.test_data[0]['expected_anchor_id'] == anchor.anchor_id)
+        self.advance_test(0, self.test_data[0]['expected_anchor_id'] == anchor.anchor_id)
     
 
 if __name__ == "__main__":
