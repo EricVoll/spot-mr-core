@@ -2,7 +2,8 @@
  <arg name="asa_tests" default="False" />
  <arg name="cmd_tests" default="True" />
  <node pkg="spot_tools_core" name="asa_anchor_rotator" type="asa_anchor_rotator_node.py" output="screen"/>
- 
+ <include file="$(find spot_tools_core)/launch/cmd_republisher.launch"/>
+
  <!-- anchor rotator tests -->
  <node pkg="spot_tools_core_tests" name="asa_anchor_rotator_tester" type="anchor_rotator_tests.py" output="screen" if="$(arg asa_tests)"/>
  

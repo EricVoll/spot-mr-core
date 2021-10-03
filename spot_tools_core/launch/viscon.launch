@@ -2,7 +2,10 @@
 
  
  <node pkg="spot_tools_core" name="asa_anchor_rotator" type="asa_anchor_rotator_node.py" output="screen"/>
+ <include file="$(find spot_tools_core)/launch/cmd_republisher.launch"/>
+ 
  <include file="$(find spot_tools_core)/launch/image_undistort.launch"/>
  <include file="$(find asa_ros)/launch/asa_ros.launch"/>
+
 
 </launch>

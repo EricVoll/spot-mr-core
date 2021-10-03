@@ -1,0 +1,9 @@
+<launch>
+
+ <node pkg="spot_tools_core" name="command_republisher" type="command_republisher.py" output="screen">
+  <remap from="/command/processed" to="/spot/command/processed"/>
+  <remap from="/command/raw" to="/spot/command/pose"/>
+  <remap from="/command/feedback" to="/spot/command/feedback"/>
+ </node>
+
+</launch>
