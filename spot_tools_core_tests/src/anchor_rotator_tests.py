@@ -1,12 +1,20 @@
+#!/usr/bin/env python3
+
 import rospy
 import sys
-# sys.path.insert(0, '/home/eric/catkin_ws/src/spot-mr-core/spot_tools_core_tests')
 
-from spot_tools_core_tests.src.test_class import TestClass
+# from my_robot_common.import_me_if_you_can import say_it_works
+# say_it_works()
+
+# sys.path.insert(0, '/home/eric/catkin_ws/src/spot-mr-core/spot_tools_core_tests')
+# print(sys.path)
+
+from spot_tools_tests_common.test_class import TestClass
+from spot_tools_tests_common.asa_mock_utils import get_mock_tf_frame
+
 from asa_ros_msgs.msg import FoundAnchor
 import tf2_ros as tf
 from geometry_msgs.msg import TransformStamped
-from spot_tools_core_tests.src.asa_mock_utils import get_mock_tf_frame
 
 class AnchorRotatorTests(TestClass):
     def __init__(self):
