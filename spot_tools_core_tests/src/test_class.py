@@ -1,4 +1,5 @@
 import rospy
+import tf2_ros as tf
 
 class TestResult:
     def __init__(self, name, msg):
@@ -16,12 +17,20 @@ class TestResult:
         
 
 class TestClass:
-    def __init__(self):
+    def __init__(self, name, requires_tf):
+        rospy.init_node(name)
         self.test_idx = 0
         self.test_results = []
         self.test_handles = []
         self.is_finished = False
         self.test_data = {}
+
+        if requires_tf:
+            #tf setup
+            self.tf_Buffer = tf.Buffer(rospy.Duration(10))
+            self.tf_listener = tf.TransformListener(self.tf_Buffer)
+            self.tf_broadcaster = tf.TransformBroadcaster()
+            self.tf_static_broadcaster = tf.StaticTransformBroadcaster()
 
     # Adds a delegate/handle to the test list, which will be called as soon as 
     # TestClass.advance_test() is called
