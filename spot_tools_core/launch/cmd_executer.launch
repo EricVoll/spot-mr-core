@@ -1,0 +1,5 @@
+<launch>
+ <node pkg="spot_tools_core" name="command_executer" type="command_executer.py" output="screen">
+    <remap from="/command/feedback" to="/spot/command/feedback"/>
+ </node>
+</launch>

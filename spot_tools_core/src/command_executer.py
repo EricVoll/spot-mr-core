@@ -1,28 +1,36 @@
 import rospy
 
-from spot_msgs.srv import Trajectory, TrajectoryResponse
+from spot_msgs.msg import TrajectoryGoal, TrajectoryAction
 from geometry_msgs.msg import PoseStamped
+import actionlib
+from std_msgs.msg import Duration, String
 
 class CommandExecuter():
     def __init__(self):
+        rospy.init_node("command_executer")
         rospy.Subscriber('/spot/command/processed', PoseStamped, self.received_cmd)
 
-    def received_cmd(self, data):
+        self.action_client = actionlib.SimpleActionClient('spot/trajectory', TrajectoryAction)
+        rospy.loginfo("Waiting for spot/trajectory server to come online")
+        self.action_client.wait_for_server()
+        rospy.loginfo("spot/trajecotry server is online. Ready to take commands.")
+        self.cmd_feedback_pub = rospy.Publisher('command/feedback', String, queue_size=10)
 
-        # build trajectory command
-        rospy.loginfo("Marked goal. Sleep.")
-        rospy.sleep(self.options["command_delay"])
-        rospy.loginfo("Starting command.")
-        trajectory = Trajectory()
-        trajectory.target_pose = data.pose
-        trajectory.target_pose.header.frame_id = "body"
-        trajectory.duration = 15
-        
-        rospy.wait_for_service('spot/trajectory')
-        trajectory_service = rospy.ServiceProxy('spot/trajectory', Trajectory)
-        response = trajectory_service(trajectory.target_pose, trajectory.duration)
-        rospy.loginfo(response.success)
-        rospy.loginfo(response.message)
+    def received_cmd(self, data):
+        self.cmd_feedback_pub.publish(String("Received command"))
+        goal = TrajectoryGoal()
+        goal.target_pose = data
+        goal.precise_positioning = False
+        goal.target_pose.header.stamp = rospy.Time(0)
+        goal.target_pose.header.frame_id = "body"
+        goal.duration = Duration()
+        goal.duration.data.secs = 10
+
+        self.action_client.send_goal(goal, done_cb = self.command_finished)
+        self.action_client.wait_for_result()
+    
+    def command_finished(self):
+        self.cmd_feedback_pub.publish("Executed command")
 
     def spin(self):
         rospy.spin()
