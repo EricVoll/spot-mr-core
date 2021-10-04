@@ -1,8 +1,11 @@
 <launch>
  <arg name="asa_tests" default="True" />
  <arg name="cmd_tests" default="True" />
+ <arg name="odom_tests" default="True" />
+ 
  <node pkg="spot_tools_core" name="asa_anchor_rotator" type="asa_anchor_rotator_node.py" output="screen"/>
  <include file="$(find spot_tools_core)/launch/cmd_republisher.launch"/>
+ <include file="$(find spot_tools_core)/launch/odom_republisher.launch"/>
 
  <!-- anchor rotator tests -->
  <node pkg="spot_tools_core_tests" name="asa_anchor_rotator_tester" type="anchor_rotator_tests.py" output="screen" if="$(arg asa_tests)"/>
@@ -10,4 +13,8 @@
  <!-- command republisher tests -->
  <node pkg="spot_tools_core_tests" name="cmd_repub_tester" type="command_republisher_tests.py" output="screen" if="$(arg cmd_tests)"/>
  
+ <!-- odometry republisher tests -->
+ <node pkg="spot_tools_core_tests" name="odom_repub_tester" type="odometry_republisher_tests.py" output="screen" if="$(arg odom_tests)"/>
+
+
 </launch>

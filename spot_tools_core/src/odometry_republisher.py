@@ -5,9 +5,10 @@ import tf2_ros as tf
 
 class OdometryRepublisher:
     def __init__(self):
-
+        rospy.init_node("odometry_republisher")
         self.anchor_ids = []
         self.robot_frame = "body"
+        self.last_closest_anchor = None
 
 
         #tf setup
@@ -16,28 +17,27 @@ class OdometryRepublisher:
         self.tf_broadcaster = tf.TransformBroadcaster()
         self.tf_static_broadcaster = tf.StaticTransformBroadcaster()
 
-        rospy.Subscriber('odometry', Odometry, self.republish_robot_odoom)
+        rospy.Subscriber('odometry', Odometry, self.republish_robot_odom)
         rospy.Subscriber('found_anchor', FoundAnchor, self.found_anchor_callback)
         rospy.Subscriber('created_anchor', CreatedAnchor, self.created_anchor_callback)
 
 
-        self.odom_publisher = rospy.Publisher('/odometry/filtered/asa_relative', Odometry, queue_size=10)
+        self.odom_publisher = rospy.Publisher('odometry/relative', Odometry, queue_size=10)
 
     def republish_robot_odom(self, data):
         current_parent_frame_id = data.header.frame_id
         child_frame_id = data.child_frame_id
 
-        if(current_parent_frame_id == self.current_anchor_id):
-            #rospy.loginfo("Skipped republishing since current anchor id "+ self.current_anchor_id + " is same as sent parent")
-            return
-
         current_anchor_id = self.find_nearest_anchor()
+
+        if current_anchor_id is None:
+            return
 
         #Lookup the transform relative to the 
         trans = self.tf_Buffer.lookup_transform(current_anchor_id, child_frame_id, rospy.Time(0), rospy.Duration(1.0))
         new_odom = Odometry()
         new_odom.header = data.header
-        new_odom.header.frame_id = self.current_anchor_id
+        new_odom.header.frame_id = current_anchor_id
 
         #Todo: couldn't find the data type of position. Will make nicer in future.
         new_odom.pose.pose.position.x = trans.transform.translation.x
@@ -78,7 +78,6 @@ class OdometryRepublisher:
 
         # Queries all registered anchors and returns the id of the nearest one to the robot frame
     def find_nearest_anchor(self):
-
         if(len(self.anchor_ids) == 1):
             return self.anchor_ids[0]
 
@@ -102,3 +101,8 @@ class OdometryRepublisher:
         trans = self.tf_Buffer.lookup_transform(target_frame, anchor_id, rospy.Time(0))
         tr = trans.transform.translation
         return (tr.x**2 + tr.y**2 + tr.z**2)**0.5
+
+
+if __name__ == "__main__":
+    odomRepub = OdometryRepublisher()
+    rospy.spin()

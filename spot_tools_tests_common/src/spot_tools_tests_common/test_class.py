@@ -42,7 +42,6 @@ class TestClass:
 
     def dispatch_to_main_thread(self, func):
         self.queue.put(func)
-        rospy.loginfo("dispatched")
 
     # Adds a delegate/handle to the test list, which will be called as soon as 
     # TestClass.advance_test() is called

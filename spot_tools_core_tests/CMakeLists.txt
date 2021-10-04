@@ -125,6 +125,7 @@ include_directories(
 catkin_install_python(PROGRAMS
   src/command_republisher_tests.py
   src/anchor_rotator_tests.py
+  src/odometry_republisher_tests.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
