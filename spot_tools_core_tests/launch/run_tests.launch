@@ -1,5 +1,5 @@
 <launch>
- <arg name="asa_tests" default="False" />
+ <arg name="asa_tests" default="True" />
  <arg name="cmd_tests" default="True" />
  <node pkg="spot_tools_core" name="asa_anchor_rotator" type="asa_anchor_rotator_node.py" output="screen"/>
  <include file="$(find spot_tools_core)/launch/cmd_republisher.launch"/>
