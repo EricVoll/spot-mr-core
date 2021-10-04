@@ -1,5 +1,7 @@
 import rospy
 import tf2_ros as tf
+import queue
+from threading import Thread
 
 class TestResult:
     def __init__(self, name, msg):
@@ -29,6 +31,7 @@ class TestClass:
         self.test_handles = []
         self.is_finished = False
         self.test_data = {}
+        self.queue = queue.Queue()
 
         if requires_tf:
             #tf setup
@@ -36,6 +39,10 @@ class TestClass:
             self.tf_listener = tf.TransformListener(self.tf_Buffer)
             self.tf_broadcaster = tf.TransformBroadcaster()
             self.tf_static_broadcaster = tf.StaticTransformBroadcaster()
+
+    def dispatch_to_main_thread(self, func):
+        self.queue.put(func)
+        rospy.loginfo("dispatched")
 
     # Adds a delegate/handle to the test list, which will be called as soon as 
     # TestClass.advance_test() is called
@@ -67,14 +74,20 @@ class TestClass:
 
     def run_next_test(self):
         rospy.loginfo(f"Starting Test {self.test_idx}: {self.test_results[self.test_idx].name}")
-        self.test_handles[self.test_idx]()
+        self.dispatch_to_main_thread(self.test_handles[self.test_idx])
 
         idx = self.test_idx
 
-        # Timeout
+        thread = Thread(target = self.wait_for_timeout, args=[idx])
+        thread.start()
+        
+
+    def wait_for_timeout(self, idx):
         rospy.sleep(3)
-        self.test_results[idx].report_timedout()
-        self.advance_test(idx, False)
+
+        if self.test_idx == idx:
+            self.test_results[idx].report_timedout()
+            self.advance_test(idx, False)
 
 
     # Reports the results of this test
@@ -93,9 +106,17 @@ class TestClass:
     def run(self):
         if len(self.test_handles) > 0:
             self.run_next_test()
-            rate = rospy.Rate(0.05)
             while not self.is_finished:
-                rate.sleep()
+                try:
+                    callback = self.queue.get(False) #doesn't block
+                    thread = Thread(target=callback)
+                    thread.start()
+
+                except queue.Empty:
+                    pass
+
+                rospy.sleep(0.1)
+
         else:
             rospy.loginfo("This TestNode did not register any tests")
     

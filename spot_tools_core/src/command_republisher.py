@@ -35,6 +35,11 @@ class CommandRepublisher():
         self.cmd_feedback_pub.publish("Received command")
 
         # Lookup cmd relative to body frame
+        rospy.loginfo(cmd.header.frame_id)
+        if not cmd.header.frame_id.endswith("_rot"):
+            rospy.loginfo("did append")
+            cmd.header.frame_id = cmd.header.frame_id + "_rot"
+
         _tf = self.pose_to_tf(cmd.pose, self.goal_frame_id, cmd.header.frame_id)
         self.tf_broadcaster.sendTransform(_tf)
 

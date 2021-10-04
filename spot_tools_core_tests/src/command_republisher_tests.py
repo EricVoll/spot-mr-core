@@ -18,7 +18,7 @@ class CommandRepublisherTests(TestClass):
         rospy.Subscriber('/spot/command/feedback', String, self.command_feedback_received)
         self.register_test_handle("MissingAnchorCmd", "Should receive failed cmd feedback", self.test_missin_anchor_cmd)
         self.register_test_handle("RepublishCmdRelative", "Command was not republished correctly", self.test_republish_cmd)
-
+        self.register_test_handle("AutoSelectRotatedAnchor", "CommandRepublisher did not auto-fix the anchor_id (append _rot)", self.test_anchor_id_rotation_fix)
         rospy.sleep(1)
 
 ##########
@@ -77,8 +77,6 @@ class CommandRepublisherTests(TestClass):
         body.transform.translation.y = 1
         self.tf_static_broadcaster.sendTransform(body)
 
-        self.test_data[0]['expected_delta'] = [t.transform.translation.x, t.transform.translation.y, t.transform.translation.z]
-        
         # publish a command
         cmd = PoseStamped()
         cmd.header.frame_id = "test_anchor_rot"
@@ -90,8 +88,33 @@ class CommandRepublisherTests(TestClass):
         rospy.loginfo("Published command!")
 
     def received_processed_cmd(self, data):
-        success = data.pose.position.x == 1 and data.pose.position.y == 0
-        self.advance_test(1, success)
+        if self.test_idx == 1:
+            success = data.pose.position.x == 1 and data.pose.position.y == 0
+            self.advance_test(1, success)
+            return
+
+        if self.test_idx == 2:
+            success = data.pose.position.x == 1 and data.pose.position.y == 1
+            self.advance_test(2, success)
+            return
+
+
+##########
+# TEST 2 #
+##########
+    # The command republisher should auto-append "_rot" to the anchor id, if 
+    # the frame_id does not end with it in the command
+    def test_anchor_id_rotation_fix(self):
+
+        # publish a command
+        cmd = PoseStamped()
+        cmd.header.frame_id = "test_anchor"
+        cmd.pose.position.x = 0
+        cmd.pose.position.y = 2
+        cmd.pose.orientation.w = 1
+        self.command_pub.publish(cmd)
+
+
 
 if __name__ == "__main__":
     tester = CommandRepublisherTests()
