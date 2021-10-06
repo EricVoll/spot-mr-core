@@ -12,6 +12,8 @@ This package contains RosNodes which help users to work with Spot and Azure Spat
 The launch file `viscon.launch` is an example of a launch file launching all required nodes for spot to be commanded relative to an ASA node. 
 
 # ROS TCP Endpoint
-To communicate with Unity you will also have to install the [ros-tcp-endpoint](https://github.com/Unity-Technologies/ROS-TCP-Endpoint) package. The `viscon.launch` launchfile already supports launching this node if wanted. It can be activated/deactivated using the `launch_tcp_node` argument.
+To communicate with Unity you will also have to install the [ros-tcp-endpoint](https://github.com/Unity-Technologies/ROS-TCP-Endpoint) package. Simply clone the repository into the catkin_ws/src foulder and build it. The `spot_tools_core` package does not have the `ros-tcp-endpoint` as a dependency, because none of the features depend on it, even though many of them only make sense in combination with it.
+
+The `viscon.launch` launchfile already supports launching this node if wanted. It can be activated/deactivated using the `launch_tcp_node` argument.
 
 The IP address of the launched tcp endpoint can be configued by editing the `/spot_tools_core/config/ros_tcp_endpoint_params.yaml` file.
