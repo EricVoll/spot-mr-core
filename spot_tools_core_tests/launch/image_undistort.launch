@@ -1,4 +1,0 @@
-<launch>
-  <!-- For the test rosbags from the asa_ros repo-->
-  <include file="$(find image_undistort)/launch/undistort_t265.launch"></include>
-</launch>
