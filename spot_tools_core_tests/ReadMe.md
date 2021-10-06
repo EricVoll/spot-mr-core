@@ -2,7 +2,7 @@
 This package contains ROS Nodes testing the functionality of the spot_tools_core package.
 
 # Launching tests
-Tests can be launched by executing this command: `roslaunch spot_tools_core_tests run_tests.launch`. Using the arguments `asa_tests`, `cmd_tests` you can opt-out of testing a certain ROS node from the main package.
+Tests can be launched by executing this command: `roslaunch spot_tools_core_tests run_tests.launch`. Using the arguments `asa_tests`, `cmd_tests` and `odom_tests` you can opt-out of testing a certain ROS node from the main package.
 E.g.: `roslaunch spot_tools_core_tests run_tests.launch asa_tests:=False` will not run the tests testing the ASA related nodes.
 
 ## Test framework usage
