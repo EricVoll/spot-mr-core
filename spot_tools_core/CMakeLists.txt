@@ -132,6 +132,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   src/asa/asa_anchor_rotator_node.py
+  src/asa/asa_anchor_find_request_helper.py
   src/command_executer.py
   src/command_republisher.py
   src/odometry_republisher.py
