@@ -2,6 +2,7 @@
 
  <arg name="launch_tcp_node" default="True"/>
  <arg name="launch_undistort_node" default="False" />
+ <arg name="launch_spot" default="False" />
  
  <node pkg="spot_tools_core" name="asa_anchor_rotator" type="asa_anchor_rotator_node.py" output="screen"/>
  <include file="$(find spot_tools_core)/launch/cmd_republisher.launch"/>
@@ -12,5 +13,7 @@
  <include file="$(find spot_tools_core)/launch/image_undistort.launch" if="$(arg launch_undistort_node)"/>
  <include file="$(find asa_ros)/launch/asa_ros.launch"/>
  <include file="$(find spot_tools_core)/launch/ros_tcp_endpoint.launch" if="$(arg launch_tcp_node)" />
+
+ <include file="$(find spot_driver)/launch/driver.launch" if="$(arg launch_spot)" />
 
 </launch>
