@@ -28,7 +28,7 @@ class CommandExecuter():
         goal.duration = Duration()
         goal.duration.data.secs = 10
 
-        self.action_client.send_goal(goal, done_cb = self.command_finished)
+        self.action_client.send_goal(goal)
         self.action_client.wait_for_result()
     
     def command_finished(self):
