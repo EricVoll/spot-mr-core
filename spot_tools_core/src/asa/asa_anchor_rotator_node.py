@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 import rospy
 import tf
@@ -41,10 +42,8 @@ class AnchorRotatorNode:
 
         quat1 = [-0.5, 0.5, 0.5, 0.5]
         quat2 = [rotation.x,rotation.y,rotation.z,rotation.w]
-        quat3 = [ 0, 0, 0.7071068, 0.7071068 ]
 
         nr = quaternion_multiply(quat2, quat1)
-        nr = quaternion_multiply(quat3, nr)
 
         rotatedtrans.transform.rotation.x = nr[0]
         rotatedtrans.transform.rotation.y = nr[1]

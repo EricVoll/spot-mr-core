@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import rospy
 from nav_msgs.msg import Odometry
 from asa_ros_msgs.msg import FoundAnchor, CreatedAnchor

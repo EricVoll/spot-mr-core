@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import rospy
 
 from spot_msgs.msg import TrajectoryGoal, TrajectoryAction
