@@ -3,7 +3,7 @@
  <node pkg="spot_tools_core" name="odometry_republisher" type="odometry_republisher.py" output="screen">
   <remap from="odometry" to="spot/odometry"/>
   <remap from="odometry/relative" to="spot/odometry/asa_relative" />
-  <remap from="found_anchor" to="asa_ros/found_anchor"/>
+  <remap from="found_anchor" to="asa_ros/found_anchor/rot"/>
   <remap from="created_anchor" to="asa_ros/created_anchor"/> 
  </node>
 

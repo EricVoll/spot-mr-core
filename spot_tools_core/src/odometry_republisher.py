@@ -70,13 +70,15 @@ class OdometryRepublisher:
 
         if anchor_id in self.anchor_ids:
             return
-        
+
         if anchor_id.endswith("_rot"):
             id = anchor_id[:-4]
             if id in self.anchor_ids:
                 self.anchor_ids.remove(id)
+                rospy.loginfo("Removed " + id)
 
         self.anchor_ids.append(anchor_id)
+        rospy.loginfo("Added " + anchor_id)
 
         # Queries all registered anchors and returns the id of the nearest one to the robot frame
     def find_nearest_anchor(self):

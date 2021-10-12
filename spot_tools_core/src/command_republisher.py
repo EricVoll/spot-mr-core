@@ -40,6 +40,10 @@ class CommandRepublisher():
             rospy.loginfo("did append")
             cmd.header.frame_id = cmd.header.frame_id + "_rot"
 
+        cmd.pose.position.x *= -1
+        cmd.pose.position.y *= -1
+        cmd.pose.position.z *= -1
+
         _tf = self.pose_to_tf(cmd.pose, self.goal_frame_id, cmd.header.frame_id)
         self.tf_broadcaster.sendTransform(_tf)
 

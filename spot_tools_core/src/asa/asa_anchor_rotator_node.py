@@ -12,7 +12,7 @@ class AnchorRotatorNode:
     def __init__(self):
         rospy.init_node('anchor_rotator')
         rospy.Subscriber('/asa_ros/found_anchor', FoundAnchor, self.asa_found_anchor_callback)
-        self.pub = rospy.Publisher("/anchor_rotated_created", FoundAnchor, queue_size=10)
+        self.pub = rospy.Publisher("/asa_ros/found_anchor/rot", FoundAnchor, queue_size=10)
 
         #tf setup
         self.tf_Buffer = tf.Buffer(rospy.Duration(10))
